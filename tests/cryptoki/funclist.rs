@@ -1,6 +1,6 @@
 #[cfg(test)]
 mod test {
-  use libc;
+  use std::os;
   use std::ptr;
   use pkcs11_rs::funclist::*;
 
@@ -13,7 +13,7 @@ mod test {
       let function_list = get_function_list(&load_lib("/opt/nfast/toolkits/pkcs11/libcknfast.so"));
 
       // Assert that function point is non-null
-      assert!(function_list.C_Initialize.unwrap() as *const libc::c_void != ptr::null() as *const libc::c_void);
+      assert!(function_list.C_Initialize.unwrap() as *const os::raw::c_void != ptr::null() as *const os::raw::c_void);
     }
   }
 }

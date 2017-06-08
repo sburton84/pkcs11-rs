@@ -11,10 +11,6 @@ mod test {
       before_each {
         let ctx = Context::new("/opt/nfast/toolkits/pkcs11/libcknfast.so");
       }
-
-      it "sdfsdfsd" {
-        let ctx = Context::new("/opt/nfast/toolkits/pkcs11/libcknfast.so");
-      }
     }
   }
 }
