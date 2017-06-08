@@ -8,3 +8,4 @@ pub mod cryptoki;
 
 pub mod funclist;
 pub mod init;
+pub mod context;

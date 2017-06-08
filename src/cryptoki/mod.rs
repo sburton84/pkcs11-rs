@@ -6,4 +6,4 @@
 #![allow(zero_ptr)]
 #![allow(expl_impl_clone_on_copy)]
 
-include!(concat!(env!("OUT_DIR"), "/cryptoki.rs"));
+include!(concat!(env!("OUT_DIR"), "/cryptoki_bindings.rs"));

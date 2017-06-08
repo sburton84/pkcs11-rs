@@ -4,9 +4,11 @@ use libloading;
 
 use cryptoki::*;
 
-fn get_function_list() -> CK_FUNCTION_LIST {
-  let lib = libloading::Library::new("/opt/nfast/toolkits/pkcs11/libcknfast.so").expect("Error loading PKCS#11 library");
+pub fn load_lib(lib_path: &str) -> libloading::Library {
+  libloading::Library::new(lib_path).expect("Error loading PKCS#11 library")
+}
 
+pub fn get_function_list(lib: &libloading::Library) -> CK_FUNCTION_LIST {
   let function_list: CK_FUNCTION_LIST;
   
   unsafe {
