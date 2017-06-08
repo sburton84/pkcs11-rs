@@ -1,2 +1,0 @@
-mod funclist;
-mod init;

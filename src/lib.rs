@@ -6,6 +6,5 @@ extern crate libloading;
 
 pub mod cryptoki;
 
-pub mod funclist;
-pub mod init;
-pub mod context;
+pub mod error;
+pub mod pkcs11;
