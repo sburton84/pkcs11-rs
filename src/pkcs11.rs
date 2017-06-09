@@ -15,11 +15,11 @@ use error::*;
 pub struct Pkcs11 {
   lib: libloading::Library,
   function_list: CK_FUNCTION_LIST,
-  initialized: bool
+  initialized: Mutex<bool>
 }
 
 lazy_static! {
-    static ref registry: Mutex<HashMap<String, Arc<Mutex<Pkcs11>>>> = {
+    static ref registry: Mutex<HashMap<String, Arc<Pkcs11>>> = {
         let mut m = HashMap::new();
         Mutex::new(m)
     };
@@ -27,14 +27,12 @@ lazy_static! {
 
 impl Drop for Pkcs11 {
   fn drop(&mut self) {
-    if self.initialized {
-      self.finalize();
-    }
+    self.finalize();
   }
 }
 
 impl Pkcs11 {
-  pub fn new(lib_path: &str) -> Result<Arc<Mutex<Pkcs11>>> {
+  pub fn new(lib_path: &str) -> Result<Arc<Pkcs11>> {
     let path = try!(Pkcs11::canonicalize_path(lib_path));
     let p11 = try!(Pkcs11::get_or_create(&path));
 
@@ -54,21 +52,17 @@ impl Pkcs11 {
     Ok(path)
   }
 
-  fn get_or_create(path: &str) -> Result<Arc<Mutex<Pkcs11>>> {
+  fn get_or_create(path: &str) -> Result<Arc<Pkcs11>> {
     let mut p11;
 
     let mut reg = registry.lock().unwrap();
 
     if reg.contains_key(path) {
       p11 = reg.get_mut(path).unwrap().clone();
-
-      if !p11.lock().unwrap().initialized {
-        p11.lock().unwrap().initialize();
-      }
     } else {
       let new_p11 = try!(Pkcs11::init_lib(path));
 
-      reg.insert(path.to_string(), Arc::new(Mutex::new(new_p11)));
+      reg.insert(path.to_string(), Arc::new(new_p11));
 
       p11 = reg.get_mut(path).unwrap().clone();
     }
@@ -95,7 +89,7 @@ impl Pkcs11 {
     let mut p11 = Pkcs11 {
       lib: lib,
       function_list: function_list,
-      initialized: false
+      initialized: Mutex::new(false)
     };
 
     p11.initialize();
@@ -122,7 +116,9 @@ impl Pkcs11 {
   }
 
   fn initialize(&mut self) -> Result<()> {
-    if !self.initialized {
+    let mut init = self.initialized.lock().unwrap();
+
+    if !*init {
       let mut args = CK_C_INITIALIZE_ARGS {
         CreateMutex: None,
         DestroyMutex: None,
@@ -143,15 +139,16 @@ impl Pkcs11 {
         })
       }
 
-      self.initialized = true;
-      Ok(())
-    } else {
-      panic!("Attempt to initialize PKCS#11 library already initialized");
+      *init = true;
     }
+
+    Ok(())
   }
 
   fn finalize(&mut self) -> Result<()> {
-    if self.initialized {
+    let mut init = self.initialized.lock().unwrap();
+
+    if *init {
       let rv = unsafe {
         (self.function_list.C_Finalize).unwrap()(ptr::null_mut())
       };
@@ -163,11 +160,10 @@ impl Pkcs11 {
         })
       }
 
-      self.initialized = false;
-      Ok(())
-    } else {
-      panic!("Attempt to finalize uninitialized PKCS#11 library");
+      *init = false;
     }
+
+    Ok(())
   }
 
   pub fn get_slot_list(&self, token_present: bool) {

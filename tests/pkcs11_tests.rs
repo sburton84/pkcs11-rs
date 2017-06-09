@@ -18,7 +18,7 @@ mod test {
       }
 
       it "can get slot list" {
-        let slots = p11.lock().unwrap().get_slot_list(true);
+        let slots = p11.get_slot_list(true);
       }
     }
   }
