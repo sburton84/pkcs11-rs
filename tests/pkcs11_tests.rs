@@ -9,12 +9,16 @@ mod test {
 
   describe! wrapper {
     it "can initialise a context" {
-      let ctx = Pkcs11::new("/opt/nfast/toolkits/pkcs11/libcknfast.so");
+      let p11 = Pkcs11::new("/opt/nfast/toolkits/pkcs11/libcknfast.so").expect("Error initialising Pkcs11");
     }
 
     describe! pkcs11 {
       before_each {
-        let ctx = Pkcs11::new("/opt/nfast/toolkits/pkcs11/libcknfast.so");
+        let p11 = Pkcs11::new("/opt/nfast/toolkits/pkcs11/libcknfast.so").expect("Error initialising Pkcs11");
+      }
+
+      it "can get slot list" {
+        let slots = p11.lock().unwrap().get_slot_list(true);
       }
     }
   }
