@@ -21,13 +21,13 @@ mod test {
         let slots = p11.get_slot_list(true);
       }
 
-      // it "can iterate over slots" {
-      //   let slots = p11.get_slot_list(true);
+      it "can iterate over slots" {
+        let mut slots = p11.get_slot_list(true);
 
-      //   for slot in slots {
-          
-      //   }
-      // }
+        for mut slot in slots.unwrap() {
+          println!("Slot {0}", slot.description().unwrap());
+        }
+      }
     }
   }
 }
