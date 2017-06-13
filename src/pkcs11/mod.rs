@@ -1,7 +1,8 @@
 mod error;
 mod registry;
 mod init;
-mod slots;
+mod slot;
+mod session;
 mod cryptoki;
 
 use std::sync::Mutex;

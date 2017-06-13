@@ -9,23 +9,23 @@ mod test {
 
   describe! wrapper {
     it "can initialise a context" {
-      let p11 = Pkcs11::new("/usr/lib/opencryptoki/libopencryptoki.so").expect("Error initialising Pkcs11");
+      let p11 = Pkcs11::new("/opt/nfast/toolkits/pkcs11/libcknfast.so").expect("Error initialising Pkcs11");
     }
 
     describe! pkcs11 {
       before_each {
-        let p11 = Pkcs11::new("/usr/lib/opencryptoki/libopencryptoki.so").expect("Error initialising Pkcs11");
+        let p11 = Pkcs11::new("/opt/nfast/toolkits/pkcs11/libcknfast.so").expect("Error initialising Pkcs11");
       }
 
       it "can get slot list" {
-        let slots = p11.get_slot_list(true);
+        let slots = p11.get_slot_list(false);
       }
 
-      it "can iterate over slots" {
-        let mut slots = p11.get_slot_list(true);
+      it "can iterate over slots and get slot info" {
+        let mut slots = p11.get_slot_list(false).unwrap();
 
-        for mut slot in slots.unwrap() {
-          println!("Slot {0}", slot.description().unwrap());
+        for mut slot in slots {
+          let slot_info = slot.get_slot_info();
         }
       }
     }

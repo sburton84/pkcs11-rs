@@ -8,28 +8,15 @@ use pkcs11::Pkcs11;
 
 pub struct Slot<'pkcs11> {
   pkcs11: &'pkcs11 Pkcs11,
-  id: u64,
-  info: Option<SlotInfo>
+  id: CK_SLOT_ID,
 }
 
 pub struct SlotInfo {
-  description: String
+  pub description: String
 }
 
 impl<'pkcs11> Slot<'pkcs11> {
-  pub fn description(&'pkcs11 mut self) -> Result<&'pkcs11 str> {
-    match self.info {
-      None => {
-        let info = try!(self.get_slot_info());
-        self.info = Some(info);
-      },
-      Some(_) => {}
-    };
-
-    Ok(&self.info.as_ref().unwrap().description)
-  }
-
-  fn get_slot_info(&self) -> Result<SlotInfo> {
+  pub fn get_slot_info(&self) -> Result<SlotInfo> {
     self.pkcs11.get_slot_info(self.id)
   }
 }
@@ -62,12 +49,16 @@ impl Pkcs11 {
           rv: Some(rv)
         })
       }
+
+      unsafe {
+        slot_ids.set_len(slot_count as usize);
+      }
     }
 
     let mut slots: Vec<Slot> = Vec::with_capacity(slot_count as usize);
 
     for slot_id in slot_ids {
-      slots.push(Slot{ pkcs11: self, id: slot_id, info: None });
+      slots.push(Slot{ pkcs11: self, id: slot_id });
     }
 
     Ok(slots)
