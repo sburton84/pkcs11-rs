@@ -2,8 +2,8 @@ use std::ptr;
 
 use libloading;
 
+use cryptoki::*;
 use pkcs11::error::*;
-use pkcs11::cryptoki::*;
 use pkcs11::Pkcs11;
 
 impl Pkcs11 {

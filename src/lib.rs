@@ -7,4 +7,5 @@ extern crate libloading;
 #[macro_use]
 extern crate lazy_static;
 
+mod cryptoki;
 pub mod pkcs11;

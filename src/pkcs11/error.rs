@@ -1,6 +1,6 @@
 use std::result;
 
-use pkcs11::cryptoki::CK_RV;
+use cryptoki::CK_RV;
 
 #[derive(Debug)]
 pub struct Pkcs11Error {

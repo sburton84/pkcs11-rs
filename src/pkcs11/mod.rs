@@ -2,16 +2,14 @@ mod error;
 mod registry;
 mod init;
 mod slot;
-mod session;
-mod cryptoki;
 
 use std::sync::Mutex;
 use std::sync::Arc;
 
 use libloading::Library;
 
+use cryptoki::CK_FUNCTION_LIST;
 use pkcs11::error::*;
-use pkcs11::cryptoki::CK_FUNCTION_LIST;
 use pkcs11::registry::get_entry;
 
 pub struct Pkcs11 {

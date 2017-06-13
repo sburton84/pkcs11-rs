@@ -28,6 +28,17 @@ mod test {
           let slot_info = slot.get_slot_info();
         }
       }
+
+      describe! slot {
+        before_each {
+          let slots = p11.get_slot_list(false).unwrap();
+          let slot = &slots[0];
+        }
+
+        it "can open session" {
+          let session = slot.open_session();
+        }
+      }
     }
   }
 }

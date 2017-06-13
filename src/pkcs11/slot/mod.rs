@@ -1,13 +1,15 @@
+mod session;
+
 use std::ptr;
 use std::vec::Vec;
 use std::mem;
 
+use cryptoki::*;
 use pkcs11::error::*;
-use pkcs11::cryptoki::*;
 use pkcs11::Pkcs11;
 
-pub struct Slot<'pkcs11> {
-  pkcs11: &'pkcs11 Pkcs11,
+pub struct Slot<'a> {
+  pkcs11: &'a Pkcs11,
   id: CK_SLOT_ID,
 }
 
@@ -15,7 +17,7 @@ pub struct SlotInfo {
   pub description: String
 }
 
-impl<'pkcs11> Slot<'pkcs11> {
+impl<'a> Slot<'a> {
   pub fn get_slot_info(&self) -> Result<SlotInfo> {
     self.pkcs11.get_slot_info(self.id)
   }
