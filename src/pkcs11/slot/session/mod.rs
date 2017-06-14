@@ -39,7 +39,7 @@ impl<'a> Session<'a> {
 }
 
 impl Pkcs11 {
-  fn open_session<'a, 'b>(&'a self, slot: &'b Slot) -> Result<Session<'b>> {
+  fn open_session<'a>(&self, slot: &'a Slot) -> Result<Session<'a>> {
     let mut session_handle: CK_SESSION_HANDLE = 0;
 
     let rv = unsafe {
