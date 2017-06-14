@@ -12,6 +12,11 @@ use cryptoki::CK_FUNCTION_LIST;
 use pkcs11::error::*;
 use pkcs11::registry::get_entry;
 
+pub use pkcs11::slot::Slot;
+pub use pkcs11::slot::session::Session;
+pub use pkcs11::slot::session::object::Object;
+pub use pkcs11::slot::session::object::attribute::Attribute;
+
 pub struct Pkcs11 {
   lib: Library,
   function_list: CK_FUNCTION_LIST,

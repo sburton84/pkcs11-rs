@@ -1,4 +1,4 @@
-mod session;
+pub mod session;
 
 use std::ptr;
 use std::vec::Vec;
@@ -25,7 +25,7 @@ impl<'a> Slot<'a> {
 
 impl Pkcs11 {
   pub fn get_slot_list(&self, token_present: bool) -> Result<Vec<Slot>> {
-    let mut slot_count: u64 = 0;
+    let mut slot_count: CK_ULONG = 0;
 
     let rv = unsafe {
       (self.function_list.C_GetSlotList).unwrap()(token_present as CK_BBOOL, ptr::null_mut(), &mut slot_count as CK_ULONG_PTR)
@@ -38,7 +38,7 @@ impl Pkcs11 {
       })
     }
 
-    let mut slot_ids: Vec<u64> = Vec::with_capacity(slot_count as usize);
+    let mut slot_ids: Vec<CK_SLOT_ID> = Vec::with_capacity(slot_count as usize);
 
     if slot_count > 0 {
       let rv = unsafe {
