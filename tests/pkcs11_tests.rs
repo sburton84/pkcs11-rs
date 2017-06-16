@@ -57,18 +57,18 @@ mod test {
           }
 
           it "can generate a key" {
-            let mut attributes = [Attribute::Label("rsagen")];
+            let mut attributes = [Attribute::Label("des3key")];
             let key = session.generate_key(Mechanism::Des3KeyGen, &attributes).expect("Error generating key");
           }
 
           describe! key {
             before_each {
-              let mut attributes = [Attribute::Label("rsagen")];
+              let mut attributes = [Attribute::Label("des3key"), Attribute::Encrypt(true)];
               let key = session.generate_key(Mechanism::Des3KeyGen, &attributes).expect("Error generating key");
             }
 
             it "can encrypt and decrypt some data" {
-              let cipher = key.encrypt(Mechanism::Des3Ecb);
+              let cipher = key.encrypt(Mechanism::Des3Ecb).expect("Error performing encrypt");
             }
           }
         }

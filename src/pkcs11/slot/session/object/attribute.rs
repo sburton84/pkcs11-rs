@@ -11,7 +11,11 @@ pub enum Attribute<'a> {
   Class(Class),
   Token(bool),
   Private(bool),
-  Label(&'a str)
+  Label(&'a str),
+  Encrypt(bool),
+  Decrypt(bool),
+  Sign(bool),
+  Verify(bool)
 }
 
 impl<'a> Attribute<'a> {
@@ -24,6 +28,11 @@ impl<'a> Attribute<'a> {
       Attribute::Token(mut b) => CK_ATTRIBUTE{ type_: CKA_TOKEN as CK_ATTRIBUTE_TYPE, pValue: &mut b as *mut _ as CK_VOID_PTR, ulValueLen: mem::size_of::<bool>() as CK_ULONG },
       Attribute::Private(mut b) => CK_ATTRIBUTE{ type_: CKA_PRIVATE as CK_ATTRIBUTE_TYPE, pValue: &mut b as *mut _ as CK_VOID_PTR, ulValueLen: mem::size_of::<bool>() as CK_ULONG },
       Attribute::Label(ref s) => CK_ATTRIBUTE{ type_: CKA_LABEL as CK_ATTRIBUTE_TYPE, pValue: s.as_ptr() as CK_VOID_PTR, ulValueLen: s.len() as CK_ULONG },
+
+      Attribute::Encrypt(mut b) => CK_ATTRIBUTE{ type_: CKA_ENCRYPT as CK_ATTRIBUTE_TYPE, pValue: &mut b as *mut _ as CK_VOID_PTR, ulValueLen: mem::size_of::<bool>() as CK_ULONG },
+      Attribute::Decrypt(mut b) => CK_ATTRIBUTE{ type_: CKA_DECRYPT as CK_ATTRIBUTE_TYPE, pValue: &mut b as *mut _ as CK_VOID_PTR, ulValueLen: mem::size_of::<bool>() as CK_ULONG },
+      Attribute::Sign(mut b) => CK_ATTRIBUTE{ type_: CKA_SIGN as CK_ATTRIBUTE_TYPE, pValue: &mut b as *mut _ as CK_VOID_PTR, ulValueLen: mem::size_of::<bool>() as CK_ULONG },
+      Attribute::Verify(mut b) => CK_ATTRIBUTE{ type_: CKA_VERIFY as CK_ATTRIBUTE_TYPE, pValue: &mut b as *mut _ as CK_VOID_PTR, ulValueLen: mem::size_of::<bool>() as CK_ULONG },
     }
   }
 }
