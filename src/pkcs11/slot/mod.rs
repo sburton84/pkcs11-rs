@@ -33,7 +33,7 @@ impl Pkcs11 {
 
     if rv != CKR_OK as CK_RV {
       return Err(Pkcs11Error{
-        description: Some("Error calling C_Initialize".to_string()),
+        description: Some("Error calling C_GetSlotList".to_string()),
         rv: Some(rv)
       })
     }
@@ -47,7 +47,7 @@ impl Pkcs11 {
 
       if rv != CKR_OK as CK_RV {
         return Err(Pkcs11Error{
-          description: Some("Error calling C_Initialize".to_string()),
+          description: Some("Error calling C_GetSlotList".to_string()),
           rv: Some(rv)
         })
       }

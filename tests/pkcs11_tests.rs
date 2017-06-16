@@ -68,7 +68,11 @@ mod test {
             }
 
             it "can encrypt and decrypt some data" {
-              let cipher = key.encrypt(Mechanism::Des3Ecb).expect("Error performing encrypt");
+              let mut cipher = key.encrypt(Mechanism::Des3Ecb, &mut "TestData".to_string().into_bytes()).expect("Error performing encrypt");
+              let plain_bytes = key.decrypt(Mechanism::Des3Ecb, &mut cipher).expect("Error performing decrypt");
+              let plain = String::from_utf8(plain_bytes).unwrap();
+
+              assert_eq!(plain, "TestData");
             }
           }
         }
