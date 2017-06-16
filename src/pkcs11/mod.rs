@@ -17,6 +17,8 @@ pub use pkcs11::slot::session::Session;
 pub use pkcs11::slot::session::object::Object;
 pub use pkcs11::slot::session::object::attribute::Attribute;
 
+pub use pkcs11::slot::session::object::mechanism::Mechanism;
+
 pub struct Pkcs11 {
   lib: Library,
   function_list: CK_FUNCTION_LIST,

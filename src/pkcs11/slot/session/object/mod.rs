@@ -1,5 +1,7 @@
 pub mod attribute;
 pub mod key;
+pub mod mechanism;
+pub mod encrypt;
 
 use std::vec::Vec;
 
@@ -17,13 +19,13 @@ pub struct Object<'a> {
 }
 
 impl<'a> Session<'a> {
-  pub fn find_objects(&self, attributes: &mut [Attribute]) -> Result<Vec<Object>> {
+  pub fn find_objects(&self, attributes: &[Attribute]) -> Result<Vec<Object>> {
     self.slot.pkcs11.find_objects(self, attributes)
   }
 }
 
 impl Pkcs11 {
-  fn find_objects(&self, session: &Session, attributes: &mut [Attribute]) -> Result<Vec<Object>> {
+  fn find_objects(&self, session: &Session, attributes: &[Attribute]) -> Result<Vec<Object>> {
     let mut ck_attrs: Vec<CK_ATTRIBUTE> = Vec::new();
 
     for attribute in attributes {

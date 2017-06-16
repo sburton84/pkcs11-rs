@@ -14,7 +14,7 @@ mod test {
 
     describe! pkcs11 {
       before_each {
-        let p11 = Pkcs11::new("/usr/lib/libsofthsm2.so").expect("Error initialising Pkcs11");
+        let p11 = Pkcs11::new("/opt/nfast/toolkits/pkcs11/libcknfast.so").expect("Error initialising Pkcs11");
       }
 
       it "can get slot list" {
@@ -53,7 +53,23 @@ mod test {
 
           it "can get objects" {
             let mut attributes = [Attribute::Label("pkcsrsa")];
-            let objects = session.find_objects(&mut attributes).expect("Error finding objects");
+            let objects = session.find_objects(&attributes).expect("Error finding objects");
+          }
+
+          it "can generate a key" {
+            let mut attributes = [Attribute::Label("rsagen")];
+            let key = session.generate_key(Mechanism::Des3KeyGen, &attributes).expect("Error generating key");
+          }
+
+          describe! key {
+            before_each {
+              let mut attributes = [Attribute::Label("rsagen")];
+              let key = session.generate_key(Mechanism::Des3KeyGen, &attributes).expect("Error generating key");
+            }
+
+            it "can encrypt and decrypt some data" {
+              let cipher = key.encrypt(Mechanism::Des3Ecb);
+            }
           }
         }
       }
